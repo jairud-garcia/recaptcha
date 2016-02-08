@@ -1,3 +1,4 @@
+#TODO: improve
 require 'recaptcha'
 
 module Recaptcha

@@ -1,48 +1,38 @@
 PATH
   remote: .
   specs:
-    recaptcha (1.1.0)
+    recaptcha18 (1.1.0)
       json
 
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (4.2.5)
-      i18n (~> 0.7)
-      json (~> 1.7, >= 1.7.7)
-      minitest (~> 5.1)
-      thread_safe (~> 0.3, >= 0.3.4)
-      tzinfo (~> 1.1)
-    addressable (2.3.8)
-    bump (0.5.3)
-    byebug (8.2.0)
-    coderay (1.1.0)
-    crack (0.4.2)
+    activesupport (2.3.11)
+    addressable (2.3.6)
+    bump (0.5.2)
+    columnize (0.3.6)
+    crack (0.4.3)
       safe_yaml (~> 1.0.0)
     hashdiff (0.2.3)
-    i18n (0.7.0)
+    i18n (0.5.4)
     json (1.8.3)
-    maxitest (1.5.4)
+    linecache (0.46)
+      rbx-require-relative (> 0.0.4)
+    maxitest (1.5.6)
       minitest (>= 5.0.0, < 5.9.0)
     metaclass (0.0.4)
-    method_source (0.8.2)
-    minitest (5.8.3)
+    minitest (5.8.4)
     mocha (1.1.0)
       metaclass (~> 0.0.1)
-    pry (0.10.3)
-      coderay (~> 1.1.0)
-      method_source (~> 0.8.1)
-      slop (~> 3.4)
-    pry-byebug (3.3.0)
-      byebug (~> 8.0)
-      pry (~> 0.10)
-    rake (10.4.2)
+    rake (10.5.0)
+    rbx-require-relative (0.0.9)
+    ruby-debug (0.10.4)
+      columnize (>= 0.1)
+      ruby-debug-base (~> 0.10.4.0)
+    ruby-debug-base (0.10.4)
+      linecache (>= 0.3)
     safe_yaml (1.0.4)
-    slop (3.6.0)
-    thread_safe (0.3.5)
-    tzinfo (1.2.2)
-      thread_safe (~> 0.1)
-    webmock (1.22.3)
+    webmock (1.22.6)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff
@@ -51,14 +41,15 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activesupport
-  bump
-  i18n
+  activesupport (~> 2.3.11)
+  addressable (= 2.3.6)
+  bump (= 0.5.2)
+  i18n (~> 0.5.0)
   maxitest
   mocha
-  pry-byebug
   rake
-  recaptcha!
+  recaptcha18!
+  ruby-debug (= 0.10.4)
   webmock
 
 BUNDLED WITH

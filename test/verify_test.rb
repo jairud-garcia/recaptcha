@@ -1,9 +1,17 @@
-require_relative 'helper'
+require 'test/helper'
 
 describe Recaptcha::Verify do
+  def setup
+    super
+    Recaptcha.configure do |config|
+      config.public_key = '0000000000000000000000000000000000000000'
+      config.private_key = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+      config.use_ssl_by_default = Recaptcha::USE_SSL_BY_DEFAULT
+    end
+  end
   before do
     @controller = TestController.new
-    @controller.request = stub(:remote_ip => "1.1.1.1", format: :html)
+    @controller.request = stub(:remote_ip => "1.1.1.1", :format =>  :html)
 
     @expected_post_data = {}
     @expected_post_data["remoteip"]   = @controller.request.remote_ip
@@ -34,7 +42,7 @@ describe Recaptcha::Verify do
   describe "#verify_recaptcha" do
     it "returns true on success" do
       @controller.flash[:recaptcha_error] = "previous error that should be cleared"
-      expect_http_post.to_return(body: '{"success":true}')
+      expect_http_post.to_return(:body=> '{"success":true}')
 
       assert @controller.verify_recaptcha
       assert_nil @controller.flash[:recaptcha_error]
@@ -48,14 +56,14 @@ describe Recaptcha::Verify do
     end
 
     it "returns false when private key is invalid" do
-      expect_http_post.to_return(body: %{{"foo":"false", "bar":"invalid-site-private-key"}})
+      expect_http_post.to_return(:body=> %{{"foo":"false", "bar":"invalid-site-private-key"}})
 
       refute @controller.verify_recaptcha
       assert_equal "Word verification response is incorrect, please try again.", @controller.flash[:recaptcha_error]
     end
 
     it "adds an error to the model" do
-      expect_http_post.to_return(body: %{{"foo":"false", "bar":"bad-news"}})
+      expect_http_post.to_return(:body=> %{{"foo":"false", "bar":"bad-news"}})
 
       errors = mock
       errors.expects(:add).with(:base, "Word verification response is incorrect, please try again.")
@@ -65,12 +73,16 @@ describe Recaptcha::Verify do
       assert_equal "Word verification response is incorrect, please try again.", @controller.flash[:recaptcha_error]
     end
 
+    #Have to be stubbed (not sure key works)
     it "returns true on success with optional key" do
-      key = 'ADIFFERENTPRIVATEKEYXXXXXXXXXXXXXX'
+      key = 'ADIFFERENTPRIVATEKEYXXXXXXXXXXXXXX'      
+      stub_request(:get, "https://www.google.com/recaptcha/api/siteverify?remoteip=1.1.1.1&response=&secret=#{key}").
+      with(:headers => {'Accept'=>'*/*'}).
+      to_return(:status => 200, :body => '{"success":true}', :headers => {})
       @controller.flash[:recaptcha_error] = "previous error that should be cleared"
-      expect_http_post(private_key: key).to_return(body: '{"success":true}')
+      expect_http_post(:private_key=> key).to_return(:body=> '{"success":true}')
 
-      assert @controller.verify_recaptcha(private_key: key)
+      assert @controller.verify_recaptcha(:private_key=> key)
       assert_nil @controller.flash[:recaptcha_error]
     end
 
@@ -81,7 +93,7 @@ describe Recaptcha::Verify do
     end
 
     it "blows up on timeout when graceful is disabled" do
-      Recaptcha.with_configuration(handle_timeouts_gracefully: false) do
+      Recaptcha.with_configuration(:handle_timeouts_gracefully=> false) do
         expect_http_post.to_timeout
         assert_raises Recaptcha::RecaptchaError, "Recaptcha unreachable." do
           assert @controller.verify_recaptcha
@@ -102,7 +114,7 @@ describe Recaptcha::Verify do
       model  = mock
       model.stubs(:errors => errors)
 
-      expect_http_post.to_return(body: %{{"foo":"false", "bar":"bad-news"}})
+      expect_http_post.to_return(:body=> %{{"foo":"false", "bar":"bad-news"}})
       @controller.verify_recaptcha(:model => model)
     end
 
@@ -124,7 +136,7 @@ describe Recaptcha::Verify do
 
     it "translates api response with I18n" do
       api_error_translated = "Bad news, body :("
-      expect_http_post.to_return(body: %{{"foo":"false", "bar":"bad-news"}})
+      expect_http_post.to_return(:body=> %{{"foo":"false", "bar":"bad-news"}})
       I18n.expects(:translate).with('recaptcha.errors.verification_failed', :default => 'Word verification response is incorrect, please try again.').returns(api_error_translated)
 
       refute @controller.verify_recaptcha
@@ -132,15 +144,15 @@ describe Recaptcha::Verify do
     end
 
     it "falls back to api respnse if i18n translation is missing" do
-      expect_http_post.to_return(body: %{{"foo":"false", "bar":"bad-news"}})
+      expect_http_post.to_return(:body=> %{{"foo":"false", "bar":"bad-news"}})
 
       refute @controller.verify_recaptcha
       assert_equal "Word verification response is incorrect, please try again.", @controller.flash[:recaptcha_error]
     end
 
     it "does not flash error when request was not html" do
-      @controller.request = stub(:remote_ip => "1.1.1.1", format: :json)
-      expect_http_post.to_return(body: %{{"foo":"false", "bar":"bad-news"}})
+      @controller.request = stub(:remote_ip => "1.1.1.1", :format => :json)
+      expect_http_post.to_return(:body=> %{{"foo":"false", "bar":"bad-news"}})
       refute @controller.verify_recaptcha
       assert_nil @controller.flash[:recaptcha_error]
     end
@@ -157,7 +169,7 @@ describe Recaptcha::Verify do
     end
   end
 
-  def expect_http_post(private_key: Recaptcha.configuration.private_key)
+  def expect_http_post(private_key = Recaptcha.configuration.private_key)
     stub_request(:get, "https://www.google.com/recaptcha/api/siteverify?remoteip=1.1.1.1&response=&secret=#{private_key}")
   end
 end

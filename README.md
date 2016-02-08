@@ -1,15 +1,8 @@
 # reCAPTCHA
 
-Author:    Jason L Perry (http://ambethia.com)<br/>
-Copyright: Copyright (c) 2007-2013 Jason L Perry<br/>
-License:   [MIT](http://creativecommons.org/licenses/MIT/)<br/>
-Info:      https://github.com/ambethia/recaptcha<br/>
-Bugs:      https://github.com/ambethia/recaptcha/issues<br/>
+This is a fork from [ambenthia recaptcha](https://github.com/ambethia/recaptcha) (e7e2a0590c5cc93e83afd3f4a70da75e191bc38a), for using with an old project rails 2.3 ruby 1.8.7 ree.
 
-This plugin adds helpers for the [reCAPTCHA API](https://www.google.com/recaptcha). In your
-views you can use the `recaptcha_tags` method to embed the needed javascript,
-and you can validate in your controllers with `verify_recaptcha` or `verify_recaptcha!`,
-which throws an error on failiure.
+Original Author:    Jason L Perry (http://ambethia.com)<br/>
 
 ## Rails Installation
 
