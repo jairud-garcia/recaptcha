@@ -46,8 +46,9 @@ describe Recaptcha::ClientHelper do
       refute_nil Recaptcha::Token.secure_token
     end
     #Improving that test cause can fail by hash undeterministic order 
-    it "adds a security token by default" do
-      html = recaptcha_tags
+    #changed cause error with stoken (bad token)
+    it "avoid security token" do
+      html = recaptcha_tags(:stoken=> true)
       html.sub!(/data-stoken="[^"]+"/, 'data-stoken="TOKEN"')
       html = (/<div(( )+[a-z\--="]+)*( data-stoken="TOKEN")(( )+[a-z\--="]+)*( )*>/i).match(html).to_s
       html.must_include "class=\"g-recaptcha\""

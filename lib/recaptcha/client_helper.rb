@@ -13,6 +13,7 @@ module Recaptcha
       
       data_attributes=options.slice(*data_attributes)
       data_attributes[:sitekey] = public_key
+      options[:stoken]=false if options[:stoken].nil? 
       data_attributes[:stoken] = Recaptcha::Token.secure_token if options[:stoken] != false
       data_attributes = data_attributes.map { |k,v| %{data-#{k.to_s.tr('_','-')}="#{v}"} }.join(" ")
 

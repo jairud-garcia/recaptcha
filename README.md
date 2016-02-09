@@ -151,6 +151,9 @@ and
 verify_recaptcha private_key: '6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx'
 ```
 
+### Scknowledges
+[I have done this work for Sistema Saberes](https://www.sistemasaberes.com).
+
 ## Misc
  - Check out the [wiki](https://github.com/ambethia/recaptcha/wiki) and leave whatever you found valuable there.
  - [Add multiple widgets to the same page](https://github.com/ambethia/recaptcha/wiki/Add-multiple-widgets-to-the-same-page)
