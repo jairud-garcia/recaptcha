@@ -9,7 +9,7 @@ Original Author:    Jason L Perry (http://ambethia.com)<br/>
 [obtain a reCAPTCHA API key](https://www.google.com/recaptcha/admin).
 
 ```Ruby
-gem "recaptcha", require: "recaptcha/rails"
+gem 'recaptcha18', :git=>'https://github.com/jairud-garcia/recaptcha.git'
 ```
 
 Keep keys out of the code base with environment variables.<br/> 
@@ -25,7 +25,7 @@ export RECAPTCHA_PRIVATE_KEY = '6Lc6BAAAAAAAAKN3DRm6VA_xxxxxxxxxxxxxxxxx'
 Add `recaptcha_tags` to the forms you want to protect. 
 
 ```Erb
-<%= form_for @foo do |f| %>
+<% form_for @foo do |f| %>
   # ... other tags
   <%= recaptcha_tags %>
   # ... other tags
