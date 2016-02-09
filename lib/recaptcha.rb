@@ -4,6 +4,25 @@ require 'recaptcha/verify'
 require 'recaptcha/token'
 require 'uri'
 
+SecureRandom.module_eval do
+  def self.uuid
+    ary = self.random_bytes(16).unpack("NnnnnN")
+    ary[2] = (ary[2] & 0x0fff) | 0x4000
+    ary[3] = (ary[3] & 0x3fff) | 0x8000
+    "%08x-%04x-%04x-%04x-%04x%08x" % ary
+  end
+end
+Base64.module_eval do
+  def self.urlsafe_encode64(value)
+    URI.escape(self.encode64(value))
+  end
+end
+URI.module_eval do
+  def self.encode_www_form(enum)
+    enum.map{|k,v| "#{CGI.escape(k.to_s)}=#{CGI.escape(v.to_s)}"}.join('&')
+  end
+end
+
 module Recaptcha
   CONFIG = {
     'server_url' => '//www.google.com/recaptcha/api.js',
